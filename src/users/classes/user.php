@@ -296,6 +296,7 @@ class User extends DB
 	public function removeUser($id) 
 	{
 
+
 	    $query = "DELETE FROM users WHERE id='$id'";
 
 	    $result = $this->db->conn->query($query);
@@ -303,8 +304,11 @@ class User extends DB
 	    if ($result) 
 	    {
 
+
 	        session_start();
 	        $_SESSION['status'] = "<div class='alert alert-success' role='alert'>Successfully deleted!</div>";
+
+			$this->deleteAll('includes/img/uploads/users/' . $id);
 	        header("Location: admin.php");
 	    } 
 	    else 
@@ -317,6 +321,23 @@ class User extends DB
 
 	    $conn->close();
 
+	}
+
+	// delete all files and sub-folders from a folder
+	private function deleteAll($dir) 
+	{
+		foreach(glob($dir . '/*') as $file) 
+		{
+			if(is_dir($file))
+
+				deleteAll($file);
+
+			else
+
+				unlink($file);
+		}
+
+		rmdir($dir);
 	}
 
 
