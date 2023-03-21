@@ -61,6 +61,35 @@ class User extends DB
 
 	}
 
+	private function uploadImage($id)
+	{
+		$allow = array("jpg", "jpeg", "gif", "png");
+
+		if (!file_exists('includes/img/uploads/users/' . $id)) 
+		{
+		    mkdir('includes/img/uploads/users/' . $id, 0777, true);
+		}
+
+		$todir = 'includes/img/uploads/users/' . $id . '/';
+
+		if ( !!$_FILES['img']['tmp_name'] ) // is the img uploaded yet?
+		{
+		    $info = explode('.', strtolower( $_FILES['img']['name']) ); // whats the extension of the img
+
+		    if ( in_array( end($info), $allow) ) // is this img allowed
+		    {
+		        if ( move_uploaded_file( $_FILES['img']['tmp_name'], $todir . basename($_FILES['img']['name'] ) ) )
+		        {
+		            // the img has been moved correctly
+		        }
+		    }
+		    else
+		    {
+		        // error this img ext is not allowed
+		    }
+		}
+	}
+
 	public function loginUser($email, $password)
 	{
 		// Check if Email exists
@@ -174,7 +203,7 @@ class User extends DB
 
 	        echo "
 	        <tr class='mt-1 pt-3 pb-3'>
-	            <th scope='row' style='text-align: center;'><img src='".$row['img']."' alt='".$row['img']."' class='rounded-pill img-fluid img-thumbnail' style='width: 8rem; height: 7rem; border-radius: 80%;'></th>
+	            <th scope='row' style='text-align: center;'><img src='../users/includes/img/uploads/users/".$row['id']."/".$row['img']."' alt='".$row['img']."' class='rounded-pill img-fluid img-thumbnail' style='width: 8rem; height: 7rem; border-radius: 80%;'></th>
 	            <th>".$row['firstname']."</th>
 	            <th>".$row['lastname']."</th>
 	            <th>".$row['email']."</th>
@@ -215,8 +244,8 @@ class User extends DB
 
 	    } else
 	    {
-	    	$target_dir = "../users/includes/img/";
-			$img = $target_dir . basename($_FILES["img"]["name"]);
+	    	// $target_dir = "../users/includes/img/uploads/users/";
+			$img = basename($_FILES["img"]["name"]);
 			$uploadOk = 1;
 			// $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 			// Check if image file is a actual image or fake image
@@ -231,15 +260,25 @@ class User extends DB
 			  // }
 
 
-
 			$query = "INSERT INTO users (firstname, lastname, email, password, img) VALUES ('$firstname', '$lastname', '$email', '$password', '$img')";
 
 			$result = $this->db->conn->query($query);
+
 
 	        if ($result)
 	        {
 	            session_start();
 	            $_SESSION['status'] = "<div class='alert alert-success' role='alert'>Successfully created! <br> Please use <a href='http://localhost/src/users/login.php'>login</a> page!</div>";
+
+				$queryID = "SELECT id FROM users WHERE email='$email'";
+
+            	$resultID = $this->db->conn->query($queryID);
+
+            	if ($resultID)
+		        {
+		        	$newUser = $resultID->fetch_assoc();
+		            $this->uploadImage($newUser['id']);
+		        }
 	            header("Location: admin.php");
 	        } 
 	        else 
