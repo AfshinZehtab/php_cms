@@ -17,7 +17,7 @@ class DB
 
 		$sql = "CREATE TABLE IF NOT EXISTS users
 		(
-		    id int PRIMARY KEY,
+		    id int AUTO_INCREMENT PRIMARY KEY,
 		    firstname varchar(30) NOT NULL,
 		    lastname varchar(30) NOT NULL,
 		    email varchar(100) NOT NULL,
