@@ -15,14 +15,25 @@ if ($_SESSION['loggedin'] <> '1@gmail.com' || !isset($_SESSION['loggedin']))
 } 
 // header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
 
-echo "<h1>Admin Panel | ";  
+
+if (basename($_SERVER['PHP_SELF'], '.php') == "admin")
+{
+  echo "<h1>Admin Panel | ";  
+}
+
 
 
 if (isset($_SESSION['firstname']) && isset($_SESSION['lastname']))
 {
 
-echo "Welcome " . $_SESSION['firstname'] . " " . $_SESSION['lastname']; 
-} else {echo "Welcome my friend!";}
+echo "Welcome " . $_SESSION['firstname'] . " " . $_SESSION['lastname'];
+
+
+} 
+else 
+{
+  echo "Welcome my friend!";
+}
 
 
 echo "</h1>";
