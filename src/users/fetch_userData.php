@@ -32,7 +32,7 @@ if ($method == 'POST')
 	if (isset($_POST['logout'])) 
 	{
 
-	  	$user->logout();
+	  	$user->logoutUser();
 
 	}
 
