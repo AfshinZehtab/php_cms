@@ -6,7 +6,7 @@ session_start();
 if ($_SESSION['loggedin'] <> '1@gmail.com' && !isset($_SESSION['loggedin'])) 
 {
 
-  header("Location: /src/users/login.php");
+  header("Location: /php_cms/src/users/login.php");
   exit();
 } 
 

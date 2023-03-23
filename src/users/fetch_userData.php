@@ -38,7 +38,8 @@ if ($method == 'POST')
 
 	if (isset($_POST['add_user'])) 
 	{
-	  $user->createUser($_POST['firstname'], $_POST['lastname'], $_POST['email'], $_POST['password'], $_FILES["img"]["name"]);
+
+		$user->createUser($_POST['firstname'], $_POST['lastname'], $_POST['email'], $_POST['password'], $_FILES["img"]);
 	// 	$uploads_dir = '../users/includes/img/';
 
 

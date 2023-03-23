@@ -67,7 +67,12 @@ class User extends DB
 
 		if (!file_exists('includes/img/uploads/users/' . $id)) 
 		{
-		    mkdir('includes/img/uploads/users/' . $id, 0777, true);
+
+			if (!mkdir('includes/img/uploads/users/' . $id, 0777, true)) 
+			{
+			    die('Failed to create directories...');
+			}
+			
 		}
 
 		$todir = 'includes/img/uploads/users/' . $id . '/';
@@ -226,7 +231,7 @@ class User extends DB
 
 	}
 
-	public function createUser($firstname, $lastname, $email, $password)
+	public function createUser($firstname, $lastname, $email, $password, $img)
 	{
 		// Check if Email exists
 
@@ -244,23 +249,11 @@ class User extends DB
 
 	    } else
 	    {
-	    	// $target_dir = "../users/includes/img/uploads/users/";
-			$img = basename($_FILES["img"]["name"]);
+
+			$imgName = basename($img["name"]);
 			$uploadOk = 1;
-			// $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-			// Check if image file is a actual image or fake image
 
-			  // $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
-			  // if($check !== false) {
-			  //   echo "File is an image - " . $check["mime"] . ".";
-			  //   $uploadOk = 1;
-			  // } else {
-			  //   echo "File is not an image.";
-			  //   $uploadOk = 0;
-			  // }
-
-
-			$query = "INSERT INTO users (firstname, lastname, email, password, img) VALUES ('$firstname', '$lastname', '$email', '$password', '$img')";
+			$query = "INSERT INTO users (firstname, lastname, email, password, img) VALUES ('$firstname', '$lastname', '$email', '$password', '$imgName')";
 
 			$result = $this->db->conn->query($query);
 
@@ -338,6 +331,11 @@ class User extends DB
 		}
 
 		rmdir($dir);
+	}
+
+	private function alertBox()
+	{
+		echo "<script> alert('TEST...'); console.log('TEST...');</script>";
 	}
 
 
